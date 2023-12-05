@@ -1,50 +1,83 @@
-import controlP5.*;
 
-ControlP5 cp5;
-int frecuenciaSensado = 1000;  // Valor predeterminado para la frecuencia en milisegundos
-int tiempoSensado = 5000;      // Valor predeterminado para el tiempo en milisegundos
-
-void setup() {
-  size(400, 200);
-  cp5 = new ControlP5(this);
-
-  // Campo para la frecuencia de sensado
-  cp5.addTextfield("Frecuencia")
-     .setPosition(20, 40)
-     .setSize(100, 20)
-     .setAutoClear(false)
-     .setValue(frecuenciaSensado + "");
-
-  // Campo para el tiempo de sensado
-  cp5.addTextfield("Tiempo")
-     .setPosition(20, 80)
-     .setSize(100, 20)
-     .setAutoClear(false)
-     .setValue(tiempoSensado + "");
-
-  // Botón para enviar datos a Arduino
-  cp5.addButton("ENVIAR_DATOS")
-     .setPosition(20, 120)
-     .setSize(150, 40);
+import processing.serial.*;
+Serial myPort;
+int estado=0;
+void setup(){
+  size(1000,600);
+  background(36,101,175);
 }
-
-void draw() {
-  background(200);
-}
-
-void controlEvent(ControlEvent theEvent) {
-  if (theEvent.isGroup() && theEvent.name().equals("Frecuencia")) {
-    frecuenciaSensado = Integer.parseInt(cp5.get(Textfield.class, "Frecuencia").getText());
-  } else if (theEvent.isGroup() && theEvent.name().equals("Tiempo")) {
-    tiempoSensado = Integer.parseInt(cp5.get(Textfield.class, "Tiempo").getText());
-  } else if (theEvent.isController() && theEvent.name().equals("ENVIAR_DATOS")) {
-    enviarDatosAArduino();
-  }
-}
-
-void enviarDatosAArduino() {
-  // Aquí puedes enviar los datos (frecuenciaSensado y tiempoSensado) a Arduino
-  println("Enviando datos a Arduino:");
-  println("Frecuencia de sensado: " + frecuenciaSensado + " ms");
-  println("Tiempo de sensado: " + tiempoSensado + " ms");
+void draw(){
+  background(36,101,175);
+  //Menú principal
+  if(estado==0){
+    fill(255);
+    textSize(40);
+    text("Menú principal. Sonar con Arduino", 10,40);
+    //Botones submenus
+    //Ingreso
+    if(mouseX>50 && mouseX<350 && mouseY>300 && mouseY<400){
+      fill(0,150,255);
+      if (mousePressed) {
+        estado = 1; // Cambia al estado del Submenú Ingreso cuando se hace clic
+      }
+    } else {
+      fill(255);
+    }
+    rect(50,300,300,100);
+    textSize(20);
+    fill(36,101,175);
+    text("Ingreso de Datos", 140,355);
+    //Muestreo
+    if(mouseX>400 && mouseX<700 && mouseY>300 && mouseY<400){
+      fill(0,150,255);
+      if (mousePressed) {
+        estado = 2; // Cambia al estado del Submenú Muestreo cuando se hace clic
+      }
+    } else {
+      fill(255);
+    }
+    rect(400,300,300,100);
+    textSize(20);
+    fill(36,101,175);
+    text("Muestreo", 520,355);
+    } 
+    
+    //Menú Ingreso de Datos
+    else if(estado==1){
+      fill(255);
+      textSize(40);
+      text("Ingreso de Datos",10,40);
+      if(mouseX > 875 && mouseX < 975 && mouseY > 25 && mouseY < 100){
+        fill(0,150,255);
+        if(mousePressed){
+          estado=0;
+        } 
+      } else {
+      fill(255);
+      }
+      rect(875,25,100,75);
+      fill(36,101,175);
+      textSize(20);
+      text("Volver",900,75);
+    }
+    
+    //Menú Muestro
+    else if(estado==2){
+      fill(255);
+      textSize(40);
+      text("Muestreo",10,40);
+      if(mouseX > 875 && mouseX < 975 && mouseY > 25 && mouseY < 100){
+        fill(0,150,255);
+        if(mousePressed){
+          estado=0;
+        } 
+      } else {
+      fill(255);
+      }
+      rect(875,25,100,75);
+      fill(36,101,175);
+      textSize(20);
+      text("Volver",900,75);
+    }
+      
 }
